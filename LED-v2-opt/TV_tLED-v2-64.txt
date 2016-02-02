@@ -1,0 +1,810 @@
+--------- input state --------------
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+
+-- input key with key size = 64 ---
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+
+--------------------------------------
+----round 00 after adding constant----
+4 0 0 0 
+5 1 0 0 
+2 0 0 0 
+3 1 0 0 
+
+----round 00 output-------------------
+7 7 F 5 
+E 2 4 D 
+8 4 B A 
+E 1 5 E 
+
+----round 01 after adding constant----
+3 7 F 5 
+B 1 4 D 
+A 4 B A 
+D 2 5 E 
+
+----round 01 output--------------------
+E B E 9 
+2 6 3 E 
+C 7 6 C 
+5 6 F D 
+
+----round 02 after adding constant----
+A B E 9 
+7 1 3 E 
+E 7 6 C 
+6 1 F D 
+
+----round 02 output-------------------
+5 2 D D 
+9 D 6 1 
+2 4 4 8 
+F D E 4 
+
+----round 03 after adding constant----
+1 3 D D 
+C A 6 1 
+0 5 4 8 
+C A E 4 
+
+----round 03 output-------------------
+8 E C 9 
+2 A D 0 
+C 0 8 0 
+5 A F D 
+
+----round 04 after adding constant----
+C D C 9 
+7 D D 0 
+E 3 8 0 
+6 D F D 
+
+----round 04 output-------------------
+C 4 3 1 
+9 C C C 
+1 C E 1 
+0 A 8 0 
+
+----round 05 after adding constant----
+8 3 3 1 
+C A C C 
+3 B E 1 
+3 C 8 0 
+
+----round 05 output--------------------
+A 1 3 6 
+4 1 6 1 
+7 C 4 B 
+9 2 4 D 
+
+----round 06 after adding constant----
+E 6 3 6 
+1 4 6 1 
+5 B 4 B 
+A 7 4 D 
+
+----round 06 output-------------------
+2 A 6 9 
+1 C 2 F 
+3 5 5 3 
+9 2 9 0 
+
+----round 07 after adding constant----
+6 D 6 9 
+4 F 2 F 
+1 2 5 3 
+A 1 9 0 
+
+----round 07 output-------------------
+7 1 C 7 
+D F C 5 
+B A 2 1 
+E 2 4 2 
+
+----round 08 after adding constant----
+3 7 C 7 
+8 8 C 5 
+9 C 2 1 
+D 5 4 2 
+
+----round 08 output-------------------
+9 1 C B 
+7 A 5 C 
+2 5 C 4 
+8 3 D A 
+
+----round 09 after adding constant----
+D 4 C B 
+2 D 5 C 
+0 0 C 4 
+B 4 D A 
+
+----round 09 output--------------------
+D 0 D 5 
+F A 7 3 
+8 D B E 
+A 8 4 3 
+
+----round 10 after adding constant----
+9 3 D 5 
+A C 7 3 
+A E B E 
+9 E 4 3 
+
+----round 10 output-------------------
+F A B C 
+3 8 2 2 
+6 E 9 2 
+F B A E 
+
+----round 11 after adding constant----
+B D B C 
+6 C 2 2 
+4 9 9 2 
+C F A E 
+
+----round 11 output-------------------
+F D 5 B 
+2 C C 8 
+5 D 1 4 
+5 C 4 9 
+
+----round 12 after adding constant----
+B A 5 B 
+7 D C 8 
+7 A 1 4 
+6 D 4 9 
+
+----round 12 output-------------------
+4 B 4 7 
+D 8 7 1 
+8 E 0 C 
+3 9 5 C 
+
+----round 13 after adding constant----
+0 D 4 7 
+8 B 7 1 
+A 8 0 C 
+0 A 5 C 
+
+----round 13 output--------------------
+E 1 7 4 
+D C B 7 
+7 6 D A 
+A 3 2 D 
+
+----round 14 after adding constant----
+A 5 7 4 
+8 B B 7 
+5 2 D A 
+9 4 2 D 
+
+----round 14 output-------------------
+1 A D 1 
+D 1 9 4 
+3 2 1 7 
+1 1 C C 
+
+----round 15 after adding constant----
+5 B D 1 
+8 7 9 4 
+1 3 1 7 
+2 7 C C 
+
+----round 15 output-------------------
+F D 5 9 
+1 5 4 E 
+C 4 8 0 
+5 4 F 5 
+
+----round 16 after adding constant----
+B E 5 9 
+4 0 4 E 
+E 7 8 0 
+6 1 F 5 
+
+----round 16 output-------------------
+C 1 9 9 
+D B E A 
+E 8 F 5 
+A 9 C C 
+
+----round 17 after adding constant----
+8 6 9 9 
+8 9 E A 
+C F F 5 
+9 B C C 
+
+----round 17 output--------------------
+E 0 9 2 
+8 B F 2 
+0 B 7 C 
+E D C E 
+
+----round 18 after adding constant----
+A 6 9 2 
+D E F 2 
+2 D 7 C 
+D 8 C E 
+
+----round 18 output-------------------
+3 A 1 A 
+D 5 9 7 
+F 9 B 2 
+3 E 9 3 
+
+----round 19 after adding constant----
+7 F 1 A 
+8 6 9 7 
+D C B 2 
+0 D 9 3 
+
+----round 19 output-------------------
+D 1 A D 
+A 2 F E 
+3 1 2 B 
+6 2 C A 
+
+----round 20 after adding constant----
+9 3 A D 
+F 4 F E 
+1 3 2 B 
+5 4 C A 
+
+----round 20 output-------------------
+5 B 3 0 
+3 5 6 B 
+8 9 4 B 
+9 0 5 3 
+
+----round 21 after adding constant----
+1 E 3 0 
+6 1 6 B 
+A C 4 B 
+A 4 5 3 
+
+----round 21 output--------------------
+6 0 E 7 
+7 B 7 4 
+B C 1 5 
+7 7 0 5 
+
+----round 22 after adding constant----
+2 3 E 7 
+2 B 7 4 
+9 F 1 5 
+4 7 0 5 
+
+----round 22 output-------------------
+9 6 B 8 
+2 C 0 1 
+2 E 5 5 
+9 0 0 5 
+
+----round 23 after adding constant----
+D 0 B 8 
+7 C 0 1 
+0 8 5 5 
+A 0 0 5 
+
+----round 23 output-------------------
+B 4 3 C 
+6 0 6 2 
+9 7 3 F 
+6 3 C 0 
+
+----round 24 after adding constant----
+F 0 3 C 
+3 1 6 2 
+B 3 3 F 
+5 2 C 0 
+
+----round 24 output-------------------
+3 B 3 5 
+1 9 9 3 
+2 C 7 2 
+0 1 7 4 
+
+----round 25 after adding constant----
+7 B 3 5 
+4 B 9 3 
+0 C 7 2 
+3 3 7 4 
+
+----round 25 output--------------------
+1 1 F 8 
+8 C E C 
+9 9 C 6 
+1 1 1 E 
+
+----round 26 after adding constant----
+5 1 F 8 
+D 9 E C 
+B 9 C 6 
+2 4 1 E 
+
+----round 26 output-------------------
+4 D E E 
+3 B 5 4 
+C 4 A F 
+D B 1 C 
+
+----round 27 after adding constant----
+0 C E E 
+6 8 5 4 
+E 5 A F 
+E 8 1 C 
+
+----round 27 output-------------------
+3 5 9 4 
+D A 4 C 
+2 4 E 6 
+D E 2 4 
+
+----round 28 after adding constant----
+7 7 9 4 
+8 D 4 C 
+0 6 E 6 
+E 9 2 4 
+
+----round 28 output-------------------
+5 D D A 
+5 3 9 D 
+D 0 3 6 
+4 F 7 4 
+
+----round 29 after adding constant----
+1 8 D A 
+0 5 9 D 
+F 5 3 6 
+7 9 7 4 
+
+----round 29 output--------------------
+3 C 3 C 
+C 5 4 7 
+E 2 8 8 
+5 3 5 0 
+
+----round 30 after adding constant----
+7 F 3 C 
+9 1 4 7 
+C 1 8 8 
+6 7 5 0 
+
+----round 30 output-------------------
+9 0 6 7 
+E 6 0 6 
+E A 2 5 
+C 5 3 1 
+
+----round 31 after adding constant----
+D 7 6 7 
+B 6 0 6 
+C D 2 5 
+F 5 3 1 
+
+----round 31 output-------------------
+3 9 C 2 
+4 0 1 0 
+0 3 A 0 
+C 7 9 8 
+
+------------- final output -----------
+3 9 C 2 
+4 0 1 0 
+0 3 A 0 
+C 7 9 8 
+
+------------- process ends -----------
+
+
+--------- input state --------------
+0 1 2 3 
+4 5 6 7 
+8 9 A B 
+C D E F 
+
+-- input key with key size = 64 ---
+0 1 2 3 
+4 5 6 7 
+8 9 A B 
+C D E F 
+
+--------------------------------------
+----round 00 after adding constant----
+4 0 0 0 
+5 1 0 0 
+2 0 0 0 
+3 1 0 0 
+
+----round 00 output-------------------
+7 7 F 5 
+E 2 4 D 
+8 4 B A 
+E 1 5 E 
+
+----round 01 after adding constant----
+3 7 F 5 
+B 1 4 D 
+A 4 B A 
+D 2 5 E 
+
+----round 01 output--------------------
+E B E 9 
+2 6 3 E 
+C 7 6 C 
+5 6 F D 
+
+----round 02 after adding constant----
+A B E 9 
+7 1 3 E 
+E 7 6 C 
+6 1 F D 
+
+----round 02 output-------------------
+5 2 D D 
+9 D 6 1 
+2 4 4 8 
+F D E 4 
+
+----round 03 after adding constant----
+1 3 D D 
+C A 6 1 
+0 5 4 8 
+C A E 4 
+
+----round 03 output-------------------
+8 E C 9 
+2 A D 0 
+C 0 8 0 
+5 A F D 
+
+----round 04 after adding constant----
+C C E A 
+3 8 B 7 
+6 A 2 B 
+A 0 1 2 
+
+----round 04 output-------------------
+0 5 5 5 
+6 9 A 5 
+1 2 F C 
+5 9 A 3 
+
+----round 05 after adding constant----
+4 2 5 5 
+3 F A 5 
+3 5 F C 
+6 F A 3 
+
+----round 05 output--------------------
+1 B 1 6 
+D F D B 
+8 1 3 6 
+1 A 6 6 
+
+----round 06 after adding constant----
+5 C 1 6 
+8 A D B 
+A 6 3 6 
+2 F 6 6 
+
+----round 06 output-------------------
+D F 6 D 
+C 4 1 8 
+2 D 5 E 
+C 5 6 F 
+
+----round 07 after adding constant----
+9 8 6 D 
+9 7 1 8 
+0 A 5 E 
+F 6 6 F 
+
+----round 07 output-------------------
+4 F 1 B 
+D F 5 0 
+3 6 7 6 
+3 6 B 9 
+
+----round 08 after adding constant----
+0 8 3 8 
+C D 3 7 
+9 9 D D 
+C C 5 6 
+
+----round 08 output-------------------
+B 1 0 7 
+A 7 7 3 
+7 7 7 5 
+C 2 3 B 
+
+----round 09 after adding constant----
+F 4 0 7 
+F 0 7 3 
+5 2 7 5 
+F 5 3 B 
+
+----round 09 output--------------------
+E B E A 
+4 0 5 C 
+E 7 5 C 
+F D E 0 
+
+----round 10 after adding constant----
+A 8 E A 
+1 6 5 C 
+C 4 5 C 
+C B E 0 
+
+----round 10 output-------------------
+8 C B F 
+6 7 1 1 
+3 2 C C 
+7 5 4 2 
+
+----round 11 after adding constant----
+C B B F 
+3 3 1 1 
+1 5 C C 
+4 1 4 2 
+
+----round 11 output-------------------
+C A 3 2 
+9 5 E F 
+F 7 B 0 
+B C E D 
+
+----round 12 after adding constant----
+8 C 1 1 
+8 1 8 8 
+5 9 1 B 
+4 0 0 2 
+
+----round 12 output-------------------
+F 2 F 0 
+3 1 A 9 
+A 9 6 0 
+5 3 1 4 
+
+----round 13 after adding constant----
+B 4 F 0 
+6 2 A 9 
+8 F 6 0 
+6 0 1 4 
+
+----round 13 output--------------------
+6 1 B 1 
+C 0 0 4 
+0 D 5 7 
+F 6 4 0 
+
+----round 14 after adding constant----
+2 5 B 1 
+9 7 0 4 
+2 9 5 7 
+C 1 4 0 
+
+----round 14 output-------------------
+D D 9 7 
+3 9 F C 
+3 D 2 1 
+8 6 7 C 
+
+----round 15 after adding constant----
+9 C 9 7 
+6 F F C 
+1 C 2 1 
+B 0 7 C 
+
+----round 15 output-------------------
+B 8 8 A 
+3 D E 4 
+C 5 7 1 
+5 D C 1 
+
+----round 16 after adding constant----
+F A A 9 
+2 D 8 3 
+6 F D A 
+A 5 2 E 
+
+----round 16 output-------------------
+3 A 5 3 
+C 9 A 3 
+3 0 3 E 
+A 2 4 1 
+
+----round 17 after adding constant----
+7 D 5 3 
+9 B A 3 
+1 7 3 E 
+9 0 4 1 
+
+----round 17 output--------------------
+6 D A C 
+B E 3 A 
+6 C A 4 
+8 4 E 1 
+
+----round 18 after adding constant----
+2 B A C 
+E B 3 A 
+4 A A 4 
+B 1 E 1 
+
+----round 18 output-------------------
+4 F D D 
+B D 3 0 
+1 E 8 1 
+4 F F B 
+
+----round 19 after adding constant----
+0 A D D 
+E E 3 0 
+3 B 8 1 
+7 C F B 
+
+----round 19 output-------------------
+1 1 E 9 
+6 4 9 9 
+A 0 0 4 
+C 8 C 8 
+
+----round 20 after adding constant----
+5 2 C A 
+7 7 F E 
+0 B A F 
+3 3 2 7 
+
+----round 20 output-------------------
+9 8 C B 
+6 C 6 0 
+9 B 9 5 
+5 C B A 
+
+----round 21 after adding constant----
+D D C B 
+3 8 6 0 
+B E 9 5 
+6 8 B A 
+
+----round 21 output--------------------
+E 2 A C 
+0 D C 3 
+D 7 9 1 
+E B C E 
+
+----round 22 after adding constant----
+A 1 A C 
+5 D C 3 
+F 4 9 1 
+D B C E 
+
+----round 22 output-------------------
+3 7 5 A 
+5 6 1 6 
+0 2 8 D 
+D 0 2 C 
+
+----round 23 after adding constant----
+7 1 5 A 
+0 6 1 6 
+2 4 8 D 
+E 0 2 C 
+
+----round 23 output-------------------
+5 E D 8 
+F D A 3 
+F 8 9 1 
+6 0 E 7 
+
+----round 24 after adding constant----
+1 B F B 
+E 9 C 4 
+5 5 3 A 
+9 C 0 8 
+
+----round 24 output-------------------
+A 0 9 C 
+7 3 B 4 
+0 1 0 F 
+8 9 F C 
+
+----round 25 after adding constant----
+E 0 9 C 
+2 1 B 4 
+2 1 0 F 
+B B F C 
+
+----round 25 output--------------------
+2 A B B 
+7 0 2 F 
+B 7 2 D 
+A 2 D 7 
+
+----round 26 after adding constant----
+6 A B B 
+2 5 2 F 
+9 7 2 D 
+9 7 D 7 
+
+----round 26 output-------------------
+B E 2 7 
+A C B 6 
+4 5 1 4 
+5 2 4 C 
+
+----round 27 after adding constant----
+F F 2 7 
+F F B 6 
+6 4 1 4 
+6 1 4 C 
+
+----round 27 output-------------------
+8 6 C 3 
+6 4 5 6 
+C C A 1 
+C B 6 F 
+
+----round 28 after adding constant----
+C 5 E 0 
+7 6 3 1 
+6 7 0 A 
+3 1 8 0 
+
+----round 28 output-------------------
+9 3 C 7 
+8 6 C 4 
+B 8 B 4 
+A 6 5 B 
+
+----round 29 after adding constant----
+D 6 C 7 
+D 0 C 4 
+9 D B 4 
+9 0 5 B 
+
+----round 29 output--------------------
+3 4 E 8 
+8 D 8 B 
+B D D 9 
+3 9 1 C 
+
+----round 30 after adding constant----
+7 7 E 8 
+D 9 8 B 
+9 E D 9 
+0 D 1 C 
+
+----round 30 output-------------------
+9 6 D 3 
+3 5 F 2 
+C 7 E 3 
+7 7 0 6 
+
+----round 31 after adding constant----
+D 1 D 3 
+6 5 F 2 
+E 0 E 3 
+4 7 0 6 
+
+----round 31 output-------------------
+A 1 2 0 
+1 0 7 9 
+B 1 3 8 
+3 1 B 7 
+
+------------- final output -----------
+A 0 0 3 
+5 5 1 E 
+3 8 9 3 
+F C 5 8 
+
+------------- process ends -----------

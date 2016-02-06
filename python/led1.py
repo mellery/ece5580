@@ -147,7 +147,10 @@ def TestVectors(kbits, p=None, k=None, answer=None):
 
     c_str = ""
     for byte in c:
-        c_str = c_str + hex(byte).split('x')[1]
+        temp = hex(byte).split('x')[1]
+        if len(temp) == 1: #add zero padding
+            temp = '0'+temp
+        c_str = c_str + temp #c_str + hex(byte).split('x')[1]
     print 'C=',c_str
 
     if answer != None:
@@ -155,7 +158,7 @@ def TestVectors(kbits, p=None, k=None, answer=None):
         if c_str == answer:
             print "PASS: ", c_str
         else:
-            print "FAIL: ", c_str, "!=", answer
+            print "FAIL: ", c_str, "!=", answer, c
 
         print "--"
 

@@ -9,6 +9,7 @@ def FieldMult(a, b):
 	ReductionPoly = 0x3
 	x = a	#abs?
 	ret = 0
+
 	for i in range(4):
 		if (b>>i)&1:
 			ret^=x
@@ -31,32 +32,39 @@ def AddConstants(state, r):
 		  0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
 		  0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A,
 		  0x34, 0x29, 0x12, 0x24, 0x08, 0x11, 0x22, 0x04)
-	state[1][0] ^= 1
-	state[2][0] ^= 2
-	state[3][0] ^= 3
 
-	state[0][0] ^= (LED>>4)&0xF
-	state[1][0] ^= (LED>>4)&0xF
+	state[1][0] ^= 0x01
+	state[2][0] ^= 0x02
+	state[3][0] ^= 0x03
+
+	state[0][0] ^= (LED>>4) & 0xF
+	state[1][0] ^= (LED>>4) & 0xF
 	state[2][0] ^= LED & 0xF
 	state[3][0] ^= LED & 0xF
 
-	tmp = (RC[r]>>3)&7
+	tmp = (RC[r]>>3) & 0x7
 	state[0][1] ^= tmp
 	state[2][1] ^= tmp
-	tmp =  RC[r] & 7
+
+	tmp =  RC[r] & 0x7
 	state[1][1] ^= tmp
 	state[3][1] ^= tmp
+
 
 def SubCell(state):
     for i in range(0,4):
         for j in range(0,4):
             state[i][j]=sbox[state[i][j]]
 
+
+
 def ShiftRow(state):
     tmp=[0]*4
+
     for i in range(0,4):
         for j in range(0,4):
             tmp[j]= state[i][j]
+
         for j in range(0,4):
             state[i][j]=tmp[(j+i)%4]
 
@@ -79,12 +87,10 @@ def LED_enc(myinput, userkey, ksbits):
 		if i%2:
                         #print i,myinput[i>>1],myinput[i>>1]&0xf
 			state[i/4][i%4] = myinput[i>>1]&0xF
+
 		else:
                         #print i,myinput[i>>1],myinput[i>>1]>>4&0xf
 			state[i/4][i%4] = myinput[i>>1]>>4&0xF
-
-        #print state
-        #print ksbits
 
 	for i in range(0,ksbits/4):
 		if i%2:
@@ -92,10 +98,10 @@ def LED_enc(myinput, userkey, ksbits):
 		else:
 			keynibbles[i/4][i%4] = (userkey[i>>1]>>4)&0xF
 
-	#print "post ksbits/4 loop"
+
 	#TODO calc RN
 	RN = 32
-        #print "pre addkey", state
+
 	AddKey(state, keynibbles, 0)
 
 	for i in range(0,8):
@@ -110,23 +116,23 @@ def LED_enc(myinput, userkey, ksbits):
 	for i in range(0,8):
 		myinput[i] = ((state[(2*i)/4][(2*i)%4] & 0xF) << 4) | (state[(2*i+1)/4][(2*i+1)%4] & 0xF)
 
-
-
 def TestVectors(kbits, p=None, k=None, answer=None):
+
     c=[0]*8
 
     if (p is None) and (k is None):
+
         p=[0]*8
         k=[0]*16
+
         for n in range(1,2):#0):
             for i in range(0,8):
                 p[i] = (random.getrandbits(8) & 0xFF)
                 c[i]=p[i]
-
     else:
         for i in range(0,8):
             c[i]=p[i]
-  
+
     k_str = ""
     for byte in k:
         k_str = k_str + hex(byte).split('x')[1]
@@ -150,6 +156,7 @@ def TestVectors(kbits, p=None, k=None, answer=None):
             print "PASS: ", c_str
         else:
             print "FAIL: ", c_str, "!=", answer
+
         print "--"
 
 def main():
@@ -159,19 +166,25 @@ def main():
     c_vec = [] 
 
     f = open('LED2-byte-TestVectors.txt')
+
     for line in f:
         l = line.strip("\n")
+
         if "K = " in l:
             k_vec.append(l.split(' = ')[1])
+
         if "P = " in l:
             p_vec.append(l.split(' = ')[1])
+
         if "C = " in l:
             c_vec.append(l.split(' = ')[1])
 
     for v in range(0,len(p_vec)):
+
         p = [p_vec[v][i:i+2] for i in range(0, len(p_vec[v]), 2)]
         for x in range(0,len(p)):
             p[x]=int(p[x],16)
+
         k = [k_vec[v][i:i+2] for i in range(0, len(k_vec[v]), 2)]
         for x in range(0,len(k)):
             k[x]=int(k[x],16)
@@ -179,36 +192,37 @@ def main():
         if len(k) == 8:
             print "LED-64"
             kbits = 64
+
         elif len(k) == 10:
             print "LED-80"
             kbits = 80
+
         elif len(k) == 16:
             print "LED-128"
             kbits = 128
-      
+
         if kbits == 64: 
             TestVectors(kbits,p,k, c_vec[v])
-    
 
     print "=============="
+
     print "LED-64: \n"
     print "using random values in testvectors"
     TestVectors(64)
+
     kbits = 64
     p=[0]*8
     k=[0]*16
 
     p = [0x11,0xe1, 0x1a,0x1c,0x1f,0x23,0xf8,0x29]
     k = [0xf8,0xa4,0x1b,0x13,0xb5,0xca,0x4e,0xe8,0x98,0x32,0x38,0xe0,0x79,0x4d,0x3d,0x34]
-    print p
-    print k
+
+    print "using hardcoded values in testvectors"
     TestVectors(kbits,p,k)
 
-    print "p and k all zeroes"
     p = [0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00]
     k = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
-    print p
-    print k
+    print "p and k all zeroes in testvectors"
     TestVectors(kbits,p,k)
 
     #print "p and k 0-9,A-F"
@@ -218,8 +232,10 @@ def main():
 
     #print "LED-80: \n"
     #TestVectors(80)
+
     #print "LED-128: \n"
     #TestVectors(128)
+
 
 if __name__ == "__main__":
     main()

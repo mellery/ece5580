@@ -135,9 +135,20 @@ void LED_enc(unsigned char* input, const unsigned char* userkey, int ksbits)
 	unsigned char keyNibbles[32];
 	int i;
 	for(i = 0; i < 16; i++) {
-		if(i%2) state[i/4][i%4] = input[i>>1]&0xF;
-		else state[i/4][i%4] = (input[i>>1]>>4)&0xF;
+		if(i%2) 
+                    state[i/4][i%4] = input[i>>1]&0xF;
+		else 
+                    state[i/4][i%4] = (input[i>>1]>>4)&0xF;
 	}
+
+        printf("in led_enc\n");
+
+        for (i=0;i<4;i++)
+        {
+            for (int x=0;x<x;x++)
+                printf("i%i,x%i=%i",i,x, state[i][x]);
+            printf("\n");
+        }
 
 	memset(keyNibbles, 0, 32);
 	for(i = 0; i < ksbits/4; i++){
@@ -170,15 +181,94 @@ void TestVectors(int kbits)
 	unsigned char c[8];
 	unsigned char k[16];
 	int n;
-	for(n = 1; n < 10; n++)
+	//for(n = 1; n < 10; n++)
+	for(n = 1; n < 2; n++)
 	{
+                printf("n now %i\n", n);
 		int i;
-		for(i = 0; i < 8; i++) c[i] = p[i] = rand() & 0xff;
-		for(i = 0; i < 16; i++)k[i] = rand() & 0xff;
-		printf("K = "); for(i = 0; i < kbits/8; i++) printf("%02x", k[i]); printf("\n");
+
+	        p[0]=c[0]=0;
+	        p[1]=c[1]=0;
+	        p[2]=c[2]=0;
+	        p[3]=c[3]=0;
+	        p[4]=c[4]=0;
+	        p[5]=c[5]=0;
+	        p[6]=c[6]=0;
+	        p[7]=c[7]=0;
+	
+	        k[0]=0;
+	        k[1]=0;
+	        k[2]=0;
+	        k[3]=0;
+	        k[4]=0;
+	        k[5]=0;
+	        k[6]=0;
+	        k[7]=0;
+	        k[8]=0;
+	        k[9]=0;
+	        k[10]=0;
+	        k[11]=0;
+	        k[12]=0;
+	        k[13]=0;
+	        k[14]=0;
+	        k[15]=0;
+
+	       /* p[0]=c[0]=11;
+	        p[1]=c[1]=225;
+	        p[2]=c[2]=26;
+	        p[3]=c[3]=28;
+	        p[4]=c[4]=127;
+	        p[5]=c[5]=35;
+	        p[6]=c[6]=248;
+	        p[7]=c[7]=41;
+	
+	        k[0]=248;
+	        k[1]=164;
+	        k[2]=27;
+	        k[3]=19;
+	        k[4]=181;
+	        k[5]=202;
+	        k[6]=78;
+	        k[7]=232;
+	        k[8]=152;
+	        k[9]=50;
+	        k[10]=56;
+	        k[11]=224;
+	        k[12]=121;
+	        k[13]=77;
+	        k[14]=61;
+	        k[15]=52;
+*/
+
+                printf("P=");
+		for(i = 0; i < 8; i++) 
+                {
+                     //c[i] = p[i] = rand() & 0xff;
+                     printf("%i ", p[i]);
+                }
+                printf("\nK=");
+		for(i = 0; i < 16; i++)
+                {
+                    // k[i] = rand() & 0xff;
+                     printf("%i ", k[i]);
+                 
+                }
+		/*printf("K = \n"); 
+
+                for(i = 0; i < kbits/8; i++) 
+                {
+                     printf("%i:%i\n", i, k[i]);
+                }
+                //printf("%02x", k[i]); 
+                printf("\n");*/
 		printf("P = "); for(i = 0; i < 8; i++) printf("%02x", p[i]); printf("\n");
 		LED_enc(c, k, kbits);
-		printf("C = "); for(i = 0; i < 8; i++) printf("%02x", c[i]); printf("\n\n");
+		printf("C = \n"); 
+                for(i = 0; i < 8; i++) 
+                { 
+                    printf("%02x\n", c[i]);
+                }
+                 printf("\n\n");
 	}
 }
 
@@ -186,9 +276,9 @@ int main(int argc, char*argv[])
 {
 	printf("LED-64: \n");
 	TestVectors(64);
-	printf("\n\nLED-80: \n");
-	TestVectors(80);
-	printf("\n\nLED-128: \n");
-	TestVectors(128);
+	//printf("\n\nLED-80: \n");
+	//TestVectors(80);
+	//printf("\n\nLED-128: \n");
+	//TestVectors(128);
 	return 0;
 }

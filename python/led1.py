@@ -2,7 +2,7 @@ __author__ = 'praneethgurram'
 import random
 
 MixColMatrix = ((4, 1, 2, 2), (8,6,5,6), (11, 14, 10, 9), (2, 2, 15, 11))
-LED = 64
+LED = 80
 sbox = (12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2)
 
 def FieldMult(a, b):
@@ -21,12 +21,14 @@ def FieldMult(a, b):
 	return ret&0xF
 
 def AddKey(state, keybytes,step):
+    global LED
     for i in  range(0,4):
         for j in range(0,4):
-            state[i][j]^=keybytes[i][j]
-            #state[i][j]=keybytes[(4*i+j+step*16)%(LED/4)]
+            #state[i][j]^=keybytes[i][j]
+            state[i][j]^=keybytes[(4*i+j+step*16)%(LED/4)]
 
 def AddConstants(state, r):
+        global LED
 	RC = (0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
 		  0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B,
 		  0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
@@ -80,41 +82,57 @@ def MixColumn(state):
 			state[i][j] = tmp[i]
 
 def LED_enc(myinput, userkey, ksbits):
+
 	state = [[0 for x in range(0,4)] for x in range(0,4)]
-        keynibbles = [[0 for x in range(0,4)] for x in range(0,4)]
+        #keynibbles2d = [[0 for x in range(0,4)] for x in range(0,4)]
+        keynibbles = [0]*32
 
 	for i in range(0,16):
-		if i%2:
-                        #print i,myinput[i>>1],myinput[i>>1]&0xf
-			state[i/4][i%4] = myinput[i>>1]&0xF
+            if i%2:
+                state[i/4][i%4] = myinput[i>>1]&0xF
+            else:
+                state[i/4][i%4] = myinput[i>>1]>>4&0xF
 
-		else:
-                        #print i,myinput[i>>1],myinput[i>>1]>>4&0xf
-			state[i/4][i%4] = myinput[i>>1]>>4&0xF
-
+        #print "ksbits/4:",ksbits/4
 	for i in range(0,ksbits/4):
-		if i%2:
-			keynibbles[i/4][i%4] = userkey[i>>1]&0xF
-		else:
-			keynibbles[i/4][i%4] = (userkey[i>>1]>>4)&0xF
+            if i%2:
+#                keynibbles2d[i/4][i%4] = userkey[i>>1]&0xF
+                keynibbles[i] = userkey[i>>1]&0xF
+            else:
+#                keynibbles2d[i/4][i%4] = (userkey[i>>1]>>4)&0xF
+                keynibbles[i] = (userkey[i>>1]>>4)&0xF
+
+
+#        print keynibbles2d
+#        for row in range(0,len(keynibbles2d)):
+            #print keynibbles2d[row]
+#            for col in range(0,len(keynibbles2d[row])):
+#                keynibbles.append(keynibbles2d[row][col])
+        #print len(keynibbles2d)    
+        #print "==="
+        while len(keynibbles) < 32:
+            keynibbles.append(0)
+#        print keynibbles
 
 
 	#TODO calc RN
-	RN = 32
+        RN = 48
+        if ksbits <= 64:
+    	    RN = 32
 
 	AddKey(state, keynibbles, 0)
 
-	for i in range(0,8):
-		for j in range(0,4):
-			AddConstants(state, i*4+j)
-			SubCell(state)
-			ShiftRow(state)
-			MixColumn(state)
+	for i in range(0,RN/4):
+            for j in range(0,4):
+		AddConstants(state, i*4+j)
+		SubCell(state)
+		ShiftRow(state)
+		MixColumn(state)
 
-		AddKey(state, keynibbles, i+1)
+	    AddKey(state, keynibbles, i+1)
 
 	for i in range(0,8):
-		myinput[i] = ((state[(2*i)/4][(2*i)%4] & 0xF) << 4) | (state[(2*i+1)/4][(2*i+1)%4] & 0xF)
+	    myinput[i] = ((state[(2*i)/4][(2*i)%4] & 0xF) << 4) | (state[(2*i+1)/4][(2*i+1)%4] & 0xF)
 
 def TestVectors(kbits, p=None, k=None, answer=None):
 
@@ -164,6 +182,7 @@ def TestVectors(kbits, p=None, k=None, answer=None):
 
 def main():
 
+    global LED
     k_vec = []
     p_vec = []
     c_vec = [] 
@@ -194,18 +213,20 @@ def main():
 
         if len(k) == 8:
             print "LED-64"
+            LED = 64
             kbits = 64
 
         elif len(k) == 10:
             print "LED-80"
+            LED = 80
             kbits = 80
 
         elif len(k) == 16:
             print "LED-128"
+            LED = 128
             kbits = 128
 
-        if kbits == 64: 
-            TestVectors(kbits,p,k, c_vec[v])
+        TestVectors(kbits,p,k, c_vec[v])
 
     print "=============="
 

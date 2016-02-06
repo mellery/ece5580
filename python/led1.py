@@ -2,7 +2,7 @@ __author__ = 'praneethgurram'
 import random
 
 MixColMatrix = ((4, 1, 2, 2), (8,6,5,6), (11, 14, 10, 9), (2, 2, 15, 11))
-LED = 80
+LED = 64
 sbox = (12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2)
 
 def FieldMult(a, b):
@@ -229,7 +229,7 @@ def main():
         TestVectors(kbits,p,k, c_vec[v])
 
     print "=============="
-
+    LED = 64
     print "LED-64: \n"
     print "using random values in testvectors"
     TestVectors(64)

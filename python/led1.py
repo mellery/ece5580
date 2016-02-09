@@ -1,9 +1,189 @@
 __author__ = 'praneethgurram'
 import random
 
+from ctypes import c_longlong as ll
+
 MixColMatrix = ((4, 1, 2, 2), (8,6,5,6), (11, 14, 10, 9), (2, 2, 15, 11))
 LED = 64
 sbox = (12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2)
+
+TS = 8
+NIB = 2
+
+INDEX_FILTER = ((1<<(NIB<<2))-1)
+
+#TODO refactor RN
+if LED <= 64:
+    RN = 32
+else:
+    RN = 48
+
+RC = [	0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
+	0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B,
+	0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
+	0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A,
+	0x34, 0x29, 0x12, 0x24, 0x08, 0x11, 0x22, 0x04]
+
+RRC = [0] * RN
+
+#Ssbox = [[0 for x in range(TS)] for x in range(1<<(NIB<<2))]
+Ssbox = [[0 for x in range(1<<(NIB<<2))] for x in range(TS)]
+
+
+def BuildTableSCShRMCS():
+    global Ssbox
+
+    print "Building Table SCShRMCS"
+ 
+    for r in range (0, TS):
+        x = 0
+        while x != (1<<(NIB<<2)):
+            c = [0]*NIB
+            result = 0
+            for i in range(0,NIB):
+                if (r*NIB+1 >= 16):
+                    break
+                c[i] = sbox[(x>>(i*4))&0xF]
+                row = (r*NIB + i) >> 2
+                col = (((r*NIB + i) & 3) + 4 - row) &3
+                for j in range(0,4):
+                    v = FieldMult(c[i], MixColMatrix[j][row])
+                    result ^= ((v&0xF) << (j*16+col*4))	
+            Ssbox[r][x] = result
+            x = x+1
+
+
+    #precompute the constants
+    for r in range(0,RN):
+        t = 0
+       
+        t |= (LED>>4)&0xF;	#type uint64_t
+        t |= (1^((LED>>4) & 0xFF)) << 16;
+        t |= (2^(LED&0xF)) << 32;
+        t |= (3^(LED&0xF)) << 48;
+
+        t |= ((RC[r] >> 3) & 7) << 4;
+        t |= ((RC[r] >> 3) & 7) << (4+32);
+        t |= ((RC[r] >> 0) & 7) << (4+16);
+        t |= ((RC[r] >> 0) & 7) << (4+16+32);
+        RRC[r] = t;
+
+def SCShRMCS(s):
+    global NIB
+ 
+    sbytes = list((s >> i) & 0xFF for i in range(0,64,8))
+
+    if (NIB==2): #&& defined(_MEM_)
+        s = Ssbox[0][sbytes[0]] ^ Ssbox[1][sbytes[1]] ^ Ssbox[2][sbytes[2]] ^ Ssbox[3][sbytes[3]] ^ Ssbox[4][sbytes[4]] ^ Ssbox[5][sbytes[5]] ^ Ssbox[6][sbytes[6]] ^ Ssbox[7][sbytes[7]]
+
+    elif (NIB==4): #&& defined(_MEM_)
+        s = Ssbox[0][(s)[0]] ^ Ssbox[1][(s)[1]] ^ Ssbox[2][(s)[2]] ^ Ssbox[3][(s)[3]]
+
+    else:
+	x = 0
+        tmp = s 
+	for i in range(0,TS):
+            x ^= Ssbox[i][tmp&INDEX_FILTER]
+            tmp >>= (NIB<<2)
+	
+	s = x
+
+    return s
+
+
+#TODO: make work for LED>64
+def LEDRound(state, key):
+    lkey = key & ((1 << LED)-1)
+    for i in range(LED,64,LED): #TODO increment by i+=i?
+        print "in loop that doesn't work"
+        lkey = (lkey<<i)^lkey
+
+    #def NOKEY?
+    state ^= lkey
+
+    for i in range(0,RN,4):
+        state ^= RRC[i+0]
+        state = SCShRMCS(state)
+
+        state ^= RRC[i+1]        
+        state = SCShRMCS(state)
+
+        state ^= RRC[i+2]        
+        state = SCShRMCS(state)
+
+        state ^= RRC[i+3]        
+        state = SCShRMCS(state)
+
+        #lkey = ROLTKEY(lkey)
+        if LED<64:
+            lkey = ((lkey>>(LED))|((lkey)<<(64-(LED))))
+
+
+        state ^= lkey
+
+    #print "STATE",state
+    #print hex(state)
+   
+    #print "calling printState"
+    printState(state)
+    
+    return state
+
+def printState(s):
+    sbytes = list((s >> i) & 0xFF for i in range(0,64,8))
+
+    s_str = ""
+    for byte in sbytes:
+        temp = hex(byte).split('x')[1]
+        temp = temp.replace('L','')
+        if len(temp) == 1: #add zero padding
+            temp = '0'+temp
+        rev = temp[::-1]
+        s_str = s_str + rev #temp #c_str + hex(byte).split('x')[1]
+
+    s_str = s_str.replace('L', '') # remove Ls
+
+
+
+    print 'S=',s_str
+ 
+
+def printSSBOX():
+    print "Ssbox\n"
+    print Ssbox
+    for s in range(0,len(Ssbox)):
+        for s2 in range(0,len(Ssbox[s])):
+            print hex(Ssbox[s][s2])
+    print "\n\nRRC\n\n"
+    print RRC
+
+    #for s in range(0,1):#len(Ssbox)):
+    #    for s2 in range(0,len(Ssbox[s])):
+    #        print hex(Ssbox[s][s2])
+
+    #print "---"
+    #for r in range(0,len(RRC)):
+    #    print hex(RRC[r])
+
+    #print "const uint64_t Ssbox[8][1<<8] = {\n"
+    #for i in range(0,TS):
+    #    print "{ "
+    #    for j in range(0,(1<<(NIB<<2))):
+    #        print Ssbox[i][j]
+    #        if (j+1 != (1<<(NIB<<2))):
+    #            print ", "
+    #    print "}"
+    #    if i+1 != TS:
+    #        print ","
+    #    print "\n"
+    #print "};\n\n\n"
+
+    #print "const uint64_t RRC[48] = {\n"
+    #for i in range(0,RN):
+    #    print "0x", RRC[i]
+    #    if i+1 !=RN:
+    #        print ","
+    #print "};\n"
 
 def FieldMult(a, b):
 	ReductionPoly = 0x3
@@ -260,6 +440,20 @@ def main():
     #print "LED-128: \n"
     #TestVectors(128)
 
+    print "\n\nCalling Optimized Version\n"
+
+    BuildTableSCShRMCS()
+
+    #print "Calling printSSBOX\n"
+    #printSSBOX()
+
+    state = 0
+    keys = 0
+    print "state = ", state
+    print "keys = ", keys
+    LEDRound(state, keys)
+    
+    
 
 if __name__ == "__main__":
     main()

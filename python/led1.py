@@ -208,29 +208,29 @@ def AddKey(state, keybytes,step):
             state[i][j]^=keybytes[(4*i+j+step*16)%(LED/4)]
 
 def AddConstants(state, r):
-        global LED
-	RC = (0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
+    global LED
+    RC = (0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
 		  0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B,
 		  0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
 		  0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A,
 		  0x34, 0x29, 0x12, 0x24, 0x08, 0x11, 0x22, 0x04)
 
-	state[1][0] ^= 0x01
-	state[2][0] ^= 0x02
-	state[3][0] ^= 0x03
+    state[1][0] ^= 0x01
+    state[2][0] ^= 0x02
+    state[3][0] ^= 0x03
 
-	state[0][0] ^= (LED>>4) & 0xF
-	state[1][0] ^= (LED>>4) & 0xF
-	state[2][0] ^= LED & 0xF
-	state[3][0] ^= LED & 0xF
+    state[0][0] ^= (LED>>4) & 0xF
+    state[1][0] ^= (LED>>4) & 0xF
+    state[2][0] ^= LED & 0xF
+    state[3][0] ^= LED & 0xF
 
-	tmp = (RC[r]>>3) & 0x7
-	state[0][1] ^= tmp
-	state[2][1] ^= tmp
+    tmp = (RC[r]>>3) & 0x7
+    state[0][1] ^= tmp
+    state[2][1] ^= tmp
 
-	tmp =  RC[r] & 0x7
-	state[1][1] ^= tmp
-	state[3][1] ^= tmp
+    tmp =  RC[r] & 0x7
+    state[1][1] ^= tmp
+    state[3][1] ^= tmp
 
 
 def SubCell(state):
@@ -251,8 +251,8 @@ def ShiftRow(state):
             state[i][j]=tmp[(j+i)%4]
 
 def MixColumn(state):
-        tmp=[0]*4
-	for j in range(0,4):
+    tmp=[0]*4
+    for j in range(0,4):
 		for i in range(0,4):
 			mySum = 0
 			for k in range(0,4):
@@ -303,13 +303,12 @@ def LED_enc(myinput, userkey, ksbits):
 	AddKey(state, keynibbles, 0)
 
 	for i in range(0,RN/4):
-            for j in range(0,4):
-		AddConstants(state, i*4+j)
-		SubCell(state)
-		ShiftRow(state)
-		MixColumn(state)
-
-	    AddKey(state, keynibbles, i+1)
+		for j in range(0,4):
+			AddConstants(state, i*4+j)
+			SubCell(state)
+			ShiftRow(state)
+			MixColumn(state)
+		AddKey(state, keynibbles, i+1)
 
 	for i in range(0,8):
 	    myinput[i] = ((state[(2*i)/4][(2*i)%4] & 0xF) << 4) | (state[(2*i+1)/4][(2*i+1)%4] & 0xF)

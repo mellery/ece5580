@@ -1,6 +1,6 @@
-# Sources
+#ources
 
-SRCS = main.c stm32f4xx_it.c system_stm32f4xx.c syscalls.c led-bytes.c
+SRCS = main.c stm32f4xx_it.c system_stm32f4xx.c syscalls.c led-bytes.c 
 
 # USB
 SRCS += usbd_usr.c usbd_cdc_vcp.c usbd_desc.c usb_bsp.c
@@ -29,7 +29,8 @@ CC=$(BINPATH)/arm-none-eabi-gcc
 OBJCOPY=$(BINPATH)/arm-none-eabi-objcopy
 SIZE=$(BINPATH)/arm-none-eabi-size
 
-CFLAGS  = -std=gnu99 -g -O2 -Wall -Tstm32_flash.ld
+#CFLAGS  = -std=gnu99 -g -O2 -Wall -Tstm32_flash.ld
+CFLAGS  = -std=gnu99 -g -Wall -Tstm32_flash.ld
 CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -nostartfiles -mcpu=cortex-m4
 
 ifeq ($(FLOAT_TYPE), hard)
@@ -38,6 +39,8 @@ CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 else
 CFLAGS += -msoft-float
 endif
+
+CFLAGS += -O3
 
 ###################################################
 

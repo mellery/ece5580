@@ -7,6 +7,10 @@
 #include "stm32f4xx.h"
 #include "main.h"
 
+#include "stm32f4xx_it.h"
+#include "stm32f4xx_tim.h"
+#include "stm32f4xx_rcc.h"
+
 #include "usbd_cdc_core.h"
 #include "usbd_usr.h"
 #include "usbd_desc.h"
@@ -15,7 +19,7 @@
 #include "led-bytes.h"
 
 // Private variables
-volatile uint32_t time_var1, time_var2;
+volatile uint32_t time_var1, time_var2, time_var3;
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
 
 // Private function prototypes
@@ -23,8 +27,20 @@ void Delay(volatile uint32_t nCount);
 void init();
 void calculation_test();
 
+
 int main(void) {
 	init();
+
+/*RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+TIM_TimeBaseInitTypeDef timerInitStructure; 
+timerInitStructure.TIM_Prescaler = 40000;
+timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+timerInitStructure.TIM_Period = 500;
+timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+timerInitStructure.TIM_RepetitionCounter = 0;
+TIM_TimeBaseInit(TIM2, &timerInitStructure);
+TIM_Cmd(TIM2, ENABLE);
+*/
 
 	/*
 	 * Disable STDOUT buffering. Otherwise nothing will be printed
@@ -51,27 +67,41 @@ void calculation_test() {
 	unsigned char p[8];
 	unsigned char c[8];
 	unsigned char k[16];
+	unsigned char k2[16];
 	int kbits = 64;
 	int n;
 	int i;
 
+	 BuildTableSCShRMCS();
+
+
 	for(;;) {
-		GPIO_SetBits(GPIOD, GPIO_Pin_12);
-		Delay(500);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_12);
-		Delay(500);
+		//GPIO_SetBits(GPIOD, GPIO_Pin_12);
+		//Delay(500);
+		//GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+		//Delay(500);
 
 		for(i = 0; i < 8; i++) c[i] = p[i] = 0x00; //& 0xff;
 		for(i = 0; i < 16; i++)k[i] = 0x00; //rand() & 0xff;
 
-		time_var2 = 0;
+		printf("optimized version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+		//GPIO_SetBits(GPIOD, GPIO_Pin_12);
+		LEDRound(0, 0);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		//GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+
+		printf("origional version\n");
+
+		time_var2 = TIM_GetCounter(TIM2);
 		LED_enc(c, k, kbits);
                 
 		//for (int i = 0;i < 1000000;i++) {
 		//	a += 0.01 * sqrtf(a);
 		//}
-
-		printf("Time:      %lu ms\n\r", time_var2);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
 		printf("Iteration: %i\n\r", iteration);
 		//printf("Value:     %.5f\n\n\r", a);
 		printf("K = ");
@@ -89,6 +119,37 @@ void calculation_test() {
 			printf("%02x", c[i]);
 		printf("\n\n\r");
 
+                printf("table version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+                LED128table_core(p,k,c);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		printf("Iteration: %i\n\r", iteration);
+		//printf("Value:     %.5f\n\n\r", a);
+		printf("K = ");
+		for (i=0; i<kbits/8;i++)
+			printf("%02x", k[i]);
+		printf("\n\r");
+
+		printf("P = ");
+		for (i=0; i<8;i++)
+			printf("%02x", p[i]);
+		printf("\n\r");
+
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+
+
+		//decryption
+		//for (i=0; i<8; i++)
+		//{
+		//	k2[i] = c[i]^p[i];
+		//	printf("%02x", k2[i] ^ c[i]);
+		//}
+
+
 		iteration++;
 	}
 }
@@ -101,6 +162,18 @@ void init() {
 		// Capture error
 		while (1){};
 	}
+
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+ 
+    TIM_TimeBaseInitTypeDef timerInitStructure; 
+    timerInitStructure.TIM_Period = 84000000-1;
+    timerInitStructure.TIM_Prescaler = 84; //40000;
+    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    timerInitStructure.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM2, &timerInitStructure);
+    TIM_Cmd(TIM2, ENABLE);
 
 	// ---------- GPIO -------- //
 	// GPIOD Periph clock enable

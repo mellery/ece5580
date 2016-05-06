@@ -20,215 +20,17 @@
  * Last Modified: 27 June 2014
  */
 
-
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
+#include "main.h"
 #include "led-bytes.h"
-#include "LED_tables.h"
+#include "led-common.h"
+#include "led-debug.h"
 
 #define ROTL16(in, l) ((in) << l) ^ ((in) >> (16-l))
 #define ROTR16(in, l) ((in) >> l) ^ ((in) << (16-l))
-#define MASK4  0x0f
-#define MASK8  0xff
-#define MASK16 0xffff
-
-#define LEDROUND(state) do {\
-        unsigned long long stateIn;\
-        stateIn = state;\
-        state  = T0_LED[stateIn & MASK8];\
-        state ^= T1_LED[(stateIn >> 8) & MASK8];\
-        state ^= T2_LED[(stateIn >> 16) & MASK8];\
-        state ^= T3_LED[(stateIn >> 24) & MASK8];\
-        state ^= T4_LED[(stateIn >> 32) & MASK8];\
-        state ^= T5_LED[(stateIn >> 40) & MASK8];\
-        state ^= T6_LED[(stateIn >> 48) & MASK8];\
-        state ^= T7_LED[(stateIn >> 56) & MASK8];\
-} while(0);
-
-
- 
-void LED128table_core(const uint8_t * plaintext, const uint8_t* roundKeys128, uint8_t* ciphertext)
-{
-	uint64_t * state, * roundKeys;
-
-	/* cast variables */
-	*((uint64_t*)ciphertext) = *((uint64_t*)plaintext);
-	state     = (uint64_t *)ciphertext;
-	roundKeys = (uint64_t *)roundKeys128;
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 1 */
-	state[0] ^= Tcon128LED[0];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[1];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[2];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[3];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 2 */
-	state[0] ^= Tcon128LED[4];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[5];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[6];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[7];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 3 */
-	state[0] ^= Tcon128LED[8];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[9];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[10];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[11];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 4 */
-	state[0] ^= Tcon128LED[12];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[13];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[14];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[15];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 5 */
-	state[0] ^= Tcon128LED[16];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[17];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[18];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[19];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 6 */
-	state[0] ^= Tcon128LED[20];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[21];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[22];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[23];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 7 */
-	state[0] ^= Tcon128LED[24];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[25];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[26];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[27];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 8 */
-	state[0] ^= Tcon128LED[28];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[29];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[30];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[31];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 9 */
-	state[0] ^= Tcon128LED[32];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[33];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[34];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[35];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 10 */
-	state[0] ^= Tcon128LED[36];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[37];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[38];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[39];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	/* step 11 */
-	state[0] ^= Tcon128LED[40];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[41];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[42];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[43];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[1];
-
-	/* step 12 */
-	state[0] ^= Tcon128LED[44];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[45];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[46];
-	LEDROUND(state[0]);
-	state[0] ^= Tcon128LED[47];
-	LEDROUND(state[0]);
-
-	/* addRoundKey */
-	state[0] ^= roundKeys[0];
-
-	return;
-}
-
-
-
-//#include "diag/Trace.h"
-//#include "stm32f4xx.h"
-//#include "stm32f4xx_hal.h"
-
 
 int LED = 64; // to use, change this to the key size wanted, assumed to be multiple of 4.
-//#define RN  32
-//int RN = 32;
 
 #if LED<=64
 	#define RN 	32
@@ -249,24 +51,9 @@ int LED = 64; // to use, change this to the key size wanted, assumed to be multi
 	#define ROLTKEY(k) (k)
 #endif
 
-const unsigned char MixColMatrix[4][4] = {
-	{4,  1, 2, 2},
-	{8,  6, 5, 6},
-	{11,14,10, 9},
-	{2,  2,15,11},
-};
-const unsigned char sbox[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
-//was byte
-const char RC[48] = {
-	0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
-	0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B,
-	0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
-	0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A,
-	0x34, 0x29, 0x12, 0x24, 0x08, 0x11, 0x22, 0x04
-};
 const unsigned char WORDFILTER = 0xF;
+	
 
-//int DEBUG = 0;
 unsigned char FieldMult(unsigned char a, unsigned char b)
 {
 	const unsigned char ReductionPoly = 0x3;
@@ -283,6 +70,31 @@ unsigned char FieldMult(unsigned char a, unsigned char b)
 	return ret&WORDFILTER;
 }
 
+/*** Add Key Bytes ***/
+//
+//
+/*void AddKeyBytes_1col(unsigned short state[4], unsigned short* keyBytes, int step)
+{
+    int i, j;
+    for(i = 0; i < 4; i++)
+        state[i] ^= keyBytes[(i+step*16)%(LED/16)];
+}
+
+
+void AddKeyBytes_1col22(unsigned short state[2][2], unsigned short* keyBytes, int step)
+{
+	int i, j;
+    for(i = 0; i < 2; i++)
+        for(j = 0; j < 2; j++)
+            state[i][j] ^= keyBytes[(2*i+j+step*4)%(LED/16)];
+}
+void AddKey_2col(unsigned short state[4][2], unsigned short* keyBytes, int step)
+{
+    int i, j;
+    for(i = 0; i < 4; i++)
+        for(j = 0; j < 2; j++)
+            state[i][j] ^= keyBytes[(2*i+j+step*16)%(LED/4)];
+}*/
 void AddKey(unsigned char state[4][4], unsigned char* keyBytes, int step)
 {
 	int i, j;
@@ -291,15 +103,66 @@ void AddKey(unsigned char state[4][4], unsigned char* keyBytes, int step)
             state[i][j] ^= keyBytes[(4*i+j+step*16)%(LED/4)];
 }
 
+//*** Add Constants ***/
+//
+//
+/*void AddConstantsBytes_1col(unsigned short state[4], int r)
+{
+	state[0] ^= (((LED>>4)&0xf) << 12);
+	state[1] ^= ((1 ^ ((LED>>4)&0xf)) << 12);
+	state[2] ^= ((2 ^ (LED & 0xf)) << 12);
+	state[3] ^= ((3 ^ (LED & 0xf)) << 12);
+
+	unsigned char tmp = (RC[r] >> 3) & 7;
+
+	state[0] ^= ((tmp & 0xF) << 8);
+	state[2] ^= ((tmp & 0xF) << 8);
+
+	tmp =  RC[r] & 7;
+
+	state[1] ^= ((tmp & 0xF) << 8);
+	state[3] ^= ((tmp & 0xF) << 8);
+}
+
+
+void AddConstantsBytes_1col22(unsigned short state[2][2], int r)
+{
+	state[0][0] ^= (((LED>>4)&0xf) << 12);
+	state[0][1] ^= ((1 ^ ((LED>>4)&0xf)) << 12);
+	state[1][0] ^= ((2 ^ (LED & 0xf)) << 12);
+	state[1][1] ^= ((3 ^ (LED & 0xf)) << 12);
+
+	unsigned char tmp = (RC[r] >> 3) & 7;
+
+	state[0][0] ^= ((tmp & 0xF) << 8);
+	state[1][0] ^= ((tmp & 0xF) << 8);
+
+	tmp =  RC[r] & 7;
+
+	state[0][1] ^= ((tmp & 0xF) << 8);
+	state[1][1] ^= ((tmp & 0xF) << 8);
+}
+
+void AddConstants_2col(unsigned short state[4][2], int r)
+{
+    state[0][0] ^= (((LED>>4)&0xf) << 4);
+    state[1][0] ^= ((1 ^ ((LED>>4)&0xf)) << 4);
+    state[2][0] ^= ((2 ^ (LED & 0xf)) << 4);
+    state[3][0] ^= ((3 ^ (LED & 0xf)) << 4);
+
+    unsigned char tmp = (RC[r] >> 3) & 7;
+
+    state[0][0] ^= tmp & 0xF;
+    state[2][0] ^= tmp & 0xF;
+
+    tmp =  RC[r] & 7;
+
+    state[1][0] ^= tmp & 0xF;
+    state[3][0] ^= tmp & 0xF;
+
+}*/
 void AddConstants(unsigned char state[4][4], int r)
 {
-	const unsigned char RC[48] = {
-		0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F,
-		0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B,
-		0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B, 0x17, 0x2E,
-		0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A,
-		0x34, 0x29, 0x12, 0x24, 0x08, 0x11, 0x22, 0x04
-	};
 	state[1][0] ^= 1;
 	state[2][0] ^= 2;
 	state[3][0] ^= 3;
@@ -317,6 +180,37 @@ void AddConstants(unsigned char state[4][4], int r)
 	state[3][1] ^= tmp;
 }
 
+/*** SubCell ***/
+//
+//
+/*void SubCellBytes_1col(unsigned short state[4])
+{
+    int i;
+    for(i = 0; i < 4; i++)
+        state[i] = (((sbox[(state[i]>>12)&0xF])<<12) | ((sbox[((state[i]>>8)&0xF)])<<8) | ((sbox[((state[i]>>4)&0xF)])<<4) | (sbox[(state[i]&0xF)]));
+        //state[i][j] = ( ((sbox[(state[i][j]>>12)&0xF])<<12) | ((sbox[((state[i][j]>>8)&0xF)])<<8) | ((sbox[((state[i][j]>>4)&0xF)])<<4) | (sbox[(state[i][j]&0xF)]) );
+}
+
+
+void SubCellBytes_1col22(unsigned short state[2][2])
+{
+	int i,j;
+	for(i = 0; i < 2; i++)
+		for(j = 0; j <  2; j++)
+            state[i][j] = ( ((sbox[(state[i][j]>>12)&0xF])<<12) | ((sbox[((state[i][j]>>8)&0xF)])<<8) | ((sbox[((state[i][j]>>4)&0xF)])<<4) | (sbox[(state[i][j]&0xF)]) );
+}
+
+void SubCell_2col(unsigned short state[2][2])
+{
+
+
+    int row,col;
+	for(row = 0; row < 4; row++)
+		for(col = 0; col < 2; col++)
+			state[row][col] = qsbox[((state[row][col]) >> 4)&0xF][(state[row][col]) & 0xF];
+
+
+}*/
 void SubCell(unsigned char state[4][4])
 {
 	int i,j;
@@ -325,6 +219,54 @@ void SubCell(unsigned char state[4][4])
 			state[i][j] = sbox[state[i][j]];
 }
 
+/*** Shift Rows ***/
+//
+//
+/*void ShiftRowBytes_1col(unsigned short state[4])
+{
+	state[1] = (((state[1] << 4) | (state[1] >> 12)) & 0xFFFF);
+	state[2] = (((state[2] << 8) | (state[2] >> 8)) & 0xFFFF);
+	state[3] = (((state[3] << 12) | (state[3] >> 4)) & 0xFFFF);
+
+	//state[0][1] = (((state[0][1] << 4) | (state[0][1] >> 12)) & 0xFFFF);
+	//state[1][0] = (((state[1][0] << 8) | (state[1][0] >> 8)) & 0xFFFF);
+	//state[1][1] = (((state[1][1] << 12) | (state[1][1] >> 4)) & 0xFFFF);
+}
+
+void ShiftRowBytes_1col22(unsigned short state[2][2])
+{
+	state[0][1] = (((state[0][1] << 4) | (state[0][1] >> 12)) & 0xFFFF);
+	state[1][0] = (((state[1][0] << 8) | (state[1][0] >> 8)) & 0xFFFF);
+	state[1][1] = (((state[1][1] << 12) | (state[1][1] >> 4)) & 0xFFFF);
+}
+
+void ShiftRow_2col(unsigned short state[4][2])
+{
+
+    #define HI_NIBBLE(b) (((b) >> 4) & 0x0F)
+    #define LO_NIBBLE(b) ((b) & 0x0F)
+
+    int row, j;
+    unsigned short tmp[4][2];
+    for(row = 1; row < 4; row++) 
+    {
+     	for(j = 0; j < 2; j++)
+             tmp[row][j] = state[row][j];
+    }
+
+    row = 1;
+    state[row][0] = (LO_NIBBLE(tmp[row][0]) << 4) | HI_NIBBLE(tmp[row][1]);
+    state[row][1] = (LO_NIBBLE(tmp[row][1]) << 4) | HI_NIBBLE(tmp[row][0]);
+
+    row = 2;
+    state[row][0] = tmp[row][1]; 
+    state[row][1] = tmp[row][0];
+
+    row = 3;
+    state[row][0] = (LO_NIBBLE(tmp[row][1]) << 4) | HI_NIBBLE(tmp[row][0]);
+    state[row][1] = (LO_NIBBLE(tmp[row][0]) << 4) | HI_NIBBLE(tmp[row][1]);
+}
+*/
 void ShiftRow(unsigned char state[4][4])
 {
 	int i, j;
@@ -337,7 +279,7 @@ void ShiftRow(unsigned char state[4][4])
 	}
 }
 
-uint64_t Ssbox[TS][1<<(NIB<<2)] = {{ 0 }};
+/*uint64_t Ssbox[TS][1<<(NIB<<2)] = {{ 0 }};
 uint64_t RRC[RN] = { 0 };
 void BuildTableSCShRMCS()
 {
@@ -382,13 +324,11 @@ void BuildTableSCShRMCS()
 	// build the round keys
 	// for(r = 0; r < RN; r++) { }
 }
-
-inline void SCShRMCS(uint64_t* s)
+*/
+/*inline void SCShRMCS(uint64_t* s)
 {
 #if (NIB==2) && defined(_MEM_)
 	*s = Ssbox[0][((uint8_t *)s)[0]] ^ Ssbox[1][((uint8_t *)s)[1]] ^ Ssbox[2][((uint8_t *)s)[2]] ^ Ssbox[3][((uint8_t *)s)[3]] ^ Ssbox[4][((uint8_t *)s)[4]] ^ Ssbox[5][((uint8_t *)s)[5]] ^ Ssbox[6][((uint8_t *)s)[6]] ^ Ssbox[7][((uint8_t *)s)[7]];
-	//uint64_t x  = Ssbox[0][((uint8_t *)s)[0]]; x ^= Ssbox[1][((uint8_t *)s)[1]]; x ^= Ssbox[2][((uint8_t *)s)[2]]; x ^= Ssbox[3][((uint8_t *)s)[3]]; x ^= Ssbox[4][((uint8_t *)s)[4]]; x ^= Ssbox[5][((uint8_t *)s)[5]]; x ^= Ssbox[6][((uint8_t *)s)[6]]; x ^= Ssbox[7][((uint8_t *)s)[7]]; *s = x;
-	//*s = Ssbox[0][((uint8_t *)s)[7]] ^ Ssbox[1][((uint8_t *)s)[6]] ^ Ssbox[2][((uint8_t *)s)[5]] ^ Ssbox[3][((uint8_t *)s)[4]] ^ Ssbox[4][((uint8_t *)s)[3]] ^ Ssbox[5][((uint8_t *)s)[2]] ^ Ssbox[6][((uint8_t *)s)[1]] ^ Ssbox[7][((uint8_t *)s)[0]];
 #elif (NIB==4) && defined(_MEM_)
 	*s = Ssbox[0][((uint16_t *)s)[0]] ^ Ssbox[1][((uint16_t *)s)[1]] ^ Ssbox[2][((uint16_t *)s)[2]] ^ Ssbox[3][((uint16_t *)s)[3]];
 #else
@@ -401,8 +341,8 @@ inline void SCShRMCS(uint64_t* s)
 	*s = x;
 #endif
 }
-
-#if LED<=64
+*/
+/*#if LED<=64
 uint64_t LEDRound(uint64_t state, uint64_t key)
 #elif LED<=128
 uint64_t LEDRound(uint64_t state, uint64_t key[2])
@@ -513,7 +453,97 @@ uint64_t LEDRound(uint64_t state, uint64_t key[2])
 #endif
 	return state;
 }
+*/
+/*** MixColumns ***/
+//
+//
+/*void MixColumnBytes_1col(unsigned short state[4]) 
+{
+	int i, j, k, l;
+	unsigned char tmp[4];
+	unsigned short sum = 0;
+	unsigned char z[4][4];
+	unsigned char q = 0;
+	for(j = 0; j < 4; j++)
+	{    
+        for(i = 0; i < 4; i++)
+        {
+            sum = 0;
+            for(k = 0; k < 4; k++)
+            {
+                l = (12 - 4*j);
+                q = ((state[k]) >> l) & 0xF;
+                sum ^= FieldMult16[MixColMatrix[i][k]][q];
+            }
+            tmp[i] = sum;
+        }
+        for(i = 0; i < 4; i++)
+		z[i][j] = tmp[i];
+    }
+	for(i = 0; i < 4; i++)
+        	state[i] = ( (z[i%4][0] << 12) | (z[i%4][1] << 8) | (z[i%4][2] << 4) | (z[i%4][3]) );
+}
 
+void MixColumnBytes_1col22(unsigned short state[2][2])  //wrong
+{
+	int i, j, k, l;
+	unsigned char tmp[4];
+	unsigned short sum = 0;
+	unsigned char z[4][4];
+	unsigned char q = 0;
+	for(j = 0; j < 4; j++)
+    {
+        for(i = 0; i < 4; i++)
+        {
+            sum = 0;
+            for(k = 0; k < 4; k++)
+            {
+                l = (12 - 4*j);
+                q = ((state[k/2][k%2]) >> l) & 0xF;
+                sum ^= FieldMult16[MixColMatrix[i][k]][q];
+            }
+            tmp[i] = sum;
+        }
+        for(i = 0; i < 4; i++)
+			z[i][j] = tmp[i];
+    }
+	for(i = 0; i < 4; i++)
+        state[i/2][i%2] = ( (z[i%4][0] << 12) | (z[i%4][1] << 8) | (z[i%4][2] << 4) | (z[i%4][3]) );
+}
+void MixColumn_2col(unsigned short state[4][2])
+{
+    int i, j, k, q;
+    unsigned char z[4][4];
+    unsigned char tmp[4];
+    for(j = 0; j < 4; j++)
+    {
+	if(j<2)
+            q = 0;
+        else
+            q = 1;
+   	for(i = 0; i < 4; i++)
+	{
+	    unsigned char sum = 0;
+	    for(k = 0; k < 4; k++)
+	    {
+	        if(j % 2)
+                    sum ^= FieldMult16[MixColMatrix[i][k]] [(state[k][q]) & 0xF];
+                else
+                    sum ^= FieldMult16[MixColMatrix[i][k]] [((state[k][q])>>4) & 0xF];
+	    }
+            tmp[i] = sum;
+	}
+	for(i = 0; i < 4; i++)
+	     z[i][j] = tmp[i];
+    }
+    for(i = 0; i < 4; i++)
+    {
+        for(j = 0; j < 4; j+=2)
+            state[i][j/2] = ((((z[i][j]) << 4) & 0xF0) | ((z[i][j+1]) & 0xF));
+    }
+
+}
+*/
 void MixColumn(unsigned char state[4][4])
 {
 	int i, j, k;
@@ -535,6 +565,101 @@ void LED80_enc(unsigned char* input, const unsigned char* userkey)
 	LED_enc(input, userkey, 80);
 }
 
+/*void LED_enc_1col(unsigned short* input, unsigned short* userkey, int ksbits)
+{
+	unsigned short state[4];
+	int i, j;
+	for(i = 0; i < 4; i++)
+            state[i] = input[i]&0xFFFF;
+
+	LED = ksbits;
+
+	AddKeyBytes_1col(state, userkey, 0);
+	for(i = 0; i < RN/4; i++)
+	{
+	    for(j = 0; j < 4; j++)
+		{
+			AddConstantsBytes_1col(state, i*4+j);
+			SubCellBytes_1col(state);
+			ShiftRowBytes_1col(state);
+			MixColumnBytes_1col(state);
+        }
+		AddKeyBytes_1col(state, userkey, i+1);
+	}
+	for(i = 0; i < 4; i++)
+		input[i] = state[i];
+	print_state_1col(state);
+}*/
+
+
+/*void LED_enc_1col22(unsigned short* input, unsigned short* userkey, int ksbits)
+{
+	unsigned short state[2][2];
+	int i, j;
+	for(i = 0; i < 4; i++)
+        state[i/2][i%2] = input[i]&0xFFFF;
+
+	LED = ksbits;
+
+	AddKeyBytes_1col22(state, userkey, 0);
+	for(i = 0; i < RN/4; i++)
+	{
+	    for(j = 0; j < 4; j++)
+		{
+			AddConstantsBytes_1col22(state, i*4+j);
+			SubCellBytes_1col22(state);
+			ShiftRowBytes_1col22(state);
+			MixColumnBytes_1col22(state);
+        }
+		AddKeyBytes_1col22(state, userkey, i+1);
+	}
+	for(i = 0; i < 4; i++)
+		input[i] = state[i/2][i%2];
+}*/
+
+/*void LED_enc_2col(unsigned short* input, const unsigned short* userkey, int ksbits)
+{
+	unsigned short state[4][2];
+	unsigned short keyBytes[8];	
+	int i;
+
+	//set initial state
+	for(i = 0; i < 8; i++) {
+		if(i%2) 
+                    state[i/2][i%2] = input[i>>1]&0xFF;
+		else 
+                    state[i/2][i%2] = (input[i>>1]>>2)&0xFF;
+	}
+
+//	memset(keyBytes, 0, 32);	//memset units?
+	for(i = 0; i < ksbits/8; i++){
+		keyBytes[i] = (userkey[i])&0xFF;
+	}
+
+	LED = ksbits;
+
+	int j;
+	AddKey_2col(state, keyBytes, 0);
+
+	for(i = 0; i < RN/4; i++){
+		for(j = 0; j < 4; j++)
+		{
+			AddConstants_2col(state, i*4+j);
+			SubCell_2col(state);
+			ShiftRow_2col(state);
+			MixColumn_2col(state);
+		}
+		AddKey_2col(state, keyBytes, i+1);
+		//printf("end of round %i\n", i);
+		//print_state_2col(state);
+	}
+	//printf("final state\n");
+	//print_state_2col(state);
+	for(i = 0; i < 8; i++)
+		input[i] = ((state[(2*i)/4][(2*i)%4] & 0xF) << 4) | (state[(2*i+1)/4][(2*i+1)%4] & 0xF);
+	//printf("final state\n");
+	
+}*/
 void LED_enc(unsigned char* input, const unsigned char* userkey, int ksbits)
 {
 	unsigned char state[4][4];
@@ -551,9 +676,7 @@ void LED_enc(unsigned char* input, const unsigned char* userkey, int ksbits)
 		else keyNibbles[i] = (userkey[i>>1]>>4)&0xF;
 	}
 	LED = ksbits;
-	//int RN = 48;
-	//if(LED <= 64)
-	//	RN = 32;
+
 	int j;
 	AddKey(state, keyNibbles, 0);
 	for(i = 0; i < RN/4; i++){
@@ -575,43 +698,11 @@ void TestVectors(int kbits)
 	unsigned char p[8];
 	unsigned char c[8];
 	unsigned char k[16];
-	int n;
-	/*for(n = 1; n < 10; n++)
-	{
-		int i;
-		for(i = 0; i < 8; i++) c[i] = p[i] = rand() & 0xff;
-		for(i = 0; i < 16; i++)k[i] = rand() & 0xff;
-		//trace_printf ("test===================================\n");
-		//trace_printf("K= ");
-		//for(i = 0; i < kbits/8; i++) trace_printf("%02x", k[i]); trace_printf("\n");
-		//trace_printf("P = "); for(i = 0; i < 8; i++) trace_printf("%02x", p[i]); trace_printf("\n");
-		LED_enc(c, k, kbits);
-		//trace_printf("C = "); for(i = 0; i < 8; i++) trace_printf("%02x", c[i]); trace_printf("\n\n");
-
-	}*/
 	int i;
-
 
 	for(i = 0; i < 8; i++) c[i] = p[i] = 0x00; //& 0xff;
 			for(i = 0; i < 16; i++)k[i] = 0x00; //rand() & 0xff;
-			//trace_printf ("test===================================\n");
-			//trace_printf("K= ");
-			//for(i = 0; i < kbits/8; i++) trace_printf("%02x", k[i]); trace_printf("\n");
-			//trace_printf("P = "); for(i = 0; i < 8; i++) trace_printf("%02x", p[i]); trace_printf("\n");
 			LED_enc(c, k, kbits);
-			//trace_printf("C = "); for(i = 0; i < 8; i++) trace_printf("%02x", c[i]); trace_printf("\n\n");
-
 
 }
 
-/*int led_main(int argc, char*argv[])
-{
-	//printf("LED-64: \n");
-	TestVectors(64);
-	//printf("\n\nLED-80: \n");
-	TestVectors(80);
-	//printf("\n\nLED-128: \n");
-	TestVectors(128);
-	return 0;
-}
-*/

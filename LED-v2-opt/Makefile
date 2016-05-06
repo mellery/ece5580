@@ -3,11 +3,8 @@ all:
 	gcc LED_v2_opt.c sha2.c timer.c -DTS=8 -DNIB=2 -DLED=64  -o LED_v2_opt64   -O3 -D_MEM_
 	gcc LED_v2_opt.c sha2.c timer.c -DTS=8 -DNIB=2 -DLED=96  -o LED_v2_opt96   -O3 -D_MEM_
 	gcc LED_v2_opt.c sha2.c timer.c -DTS=8 -DNIB=2 -DLED=128  -o LED_v2_opt128   -O3 -D_MEM_
-	./LED_v2_opt48
 	./LED_v2_opt64
-	./LED_v2_opt96
-	./LED_v2_opt128
-	rm -rf LED_v2_opt48 LED_v2_opt64 LED_v2_opt96 LED_v2_opt128
+#	rm -rf LED_v2_opt48 LED_v2_opt64 LED_v2_opt96 LED_v2_opt128
 	
 testvector:
 	gcc -O3  LED_v2_opt.c -DLED=64 -o  tvLED64-v2 timer.c sha2.c -D_PRINT_ -D_TABLE_

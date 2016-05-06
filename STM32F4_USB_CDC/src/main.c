@@ -16,7 +16,7 @@
 #include "usbd_desc.h"
 #include "usbd_cdc_vcp.h"
 
-#include "led-bytes.h"
+//#include "led-bytes.h"
 
 // Private variables
 volatile uint32_t time_var1, time_var2, time_var3;
@@ -61,18 +61,24 @@ TIM_Cmd(TIM2, ENABLE);
 }
 
 void calculation_test() {
-	float a = 1.001;
 	int iteration = 0;
 
 	unsigned char p[8];
 	unsigned char c[8];
 	unsigned char k[16];
-	unsigned char k2[16];
+
+        unsigned short p16[4];
+        unsigned short c16[4];
+        unsigned short k16[8];
+	
+	unsigned short p1col[4];
+	unsigned short c1col[4];
+	unsigned short k1col[8];
+
 	int kbits = 64;
-	int n;
 	int i;
 
-	 BuildTableSCShRMCS();
+	 //BuildTableSCShRMCS();
 
 
 	for(;;) {
@@ -84,48 +90,92 @@ void calculation_test() {
 		for(i = 0; i < 8; i++) c[i] = p[i] = 0x00; //& 0xff;
 		for(i = 0; i < 16; i++)k[i] = 0x00; //rand() & 0xff;
 
+		for (i=0; i<=3; i++)
+		        p16[i]=c16[i]=0;
+		for (i=0; i<=7; i++)
+			k16[i]=0;	
+
+	        c1col[0] = p1col[0] = k1col[0] = k1col[4] = 0x0000;
+	        c1col[1] = p1col[1] = k1col[1] = k1col[5] = 0x0000;
+	        c1col[2] = p1col[2] = k1col[2] = k1col[6] = 0x0000;
+	        c1col[3] = p1col[3] = k1col[3] = k1col[7] = 0x0000;
+
+/*		uint64_t opt_state;
 		printf("optimized version\n");
 		time_var2 = TIM_GetCounter(TIM2);
 		//GPIO_SetBits(GPIOD, GPIO_Pin_12);
-		LEDRound(0, 0);
-		time_var3 = TIM_GetCounter(TIM2) - time_var2;
-		printf("Time:      %lu us\n\r", time_var3);
+		opt_state = LEDRound(0, 0);
 		//GPIO_ResetBits(GPIOD, GPIO_Pin_12);
-
-		printf("origional version\n");
-
-		time_var2 = TIM_GetCounter(TIM2);
-		LED_enc(c, k, kbits);
-                
-		//for (int i = 0;i < 1000000;i++) {
-		//	a += 0.01 * sqrtf(a);
-		//}
 		time_var3 = TIM_GetCounter(TIM2) - time_var2;
 		printf("Time:      %lu us\n\r", time_var3);
-		printf("Iteration: %i\n\r", iteration);
-		//printf("Value:     %.5f\n\n\r", a);
-		printf("K = ");
-		for (i=0; i<kbits/8;i++)
-			printf("%02x", k[i]);
-		printf("\n\r");
-
-		printf("P = ");
-		for (i=0; i<8;i++)
-			printf("%02x", p[i]);
-		printf("\n\r");
-
 		printf("C = ");
-		for (i=0; i<8;i++)
-			printf("%02x", c[i]);
+		//for (i=0; i<8;i++)
+		//	printf("%02x", opt_state[i]);
+			//printf("%02x", c[i]);
+                printf("%Lu", opt_state);
 		printf("\n\n\r");
 
                 printf("table version\n");
 		time_var2 = TIM_GetCounter(TIM2);
-                LED128table_core(p,k,c);
+                LED64table_core(p,k,c);
 		time_var3 = TIM_GetCounter(TIM2) - time_var2;
 		printf("Time:      %lu us\n\r", time_var3);
-		printf("Iteration: %i\n\r", iteration);
-		//printf("Value:     %.5f\n\n\r", a);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
+/*		printf("origional version\n");
+                time_var2 = TIM_GetCounter(TIM2);
+  	        LED_enc(c, k, kbits);
+                time_var3 = TIM_GetCounter(TIM2) - time_var2;
+	        printf("Time:      %lu us\n\r", time_var3);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
+/*		printf("byte version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+		LED_enc_2col(c16, k16, kbits);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
+/*		printf("tbox 4x2 version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+		LED_enc_2col_tbox(c16, k16, kbits);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
+/*		printf("two byte 2x2 version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+		LED_enc_1col22(c16, k16, kbits);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
+/*		printf("two byte 4x1 version\n");
+		time_var2 = TIM_GetCounter(TIM2);
+		LED_enc_1col(c1col, k1col, kbits);
+		time_var3 = TIM_GetCounter(TIM2) - time_var2;
+		printf("Time:      %lu us\n\r", time_var3);
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/	
+ 		printf("Iteration: %i\n\r", iteration);
 		printf("K = ");
 		for (i=0; i<kbits/8;i++)
 			printf("%02x", k[i]);
@@ -141,6 +191,21 @@ void calculation_test() {
 			printf("%02x", c[i]);
 		printf("\n\n\r");
 
+		/*printf("K = ");
+		for (i=0; i<kbits/8;i++)
+			printf("%02x", k[i]);
+		printf("\n\r");
+
+		printf("P = ");
+		for (i=0; i<8;i++)
+			printf("%02x", p[i]);
+		printf("\n\r");
+
+		printf("C = ");
+		for (i=0; i<8;i++)
+			printf("%02x", c[i]);
+		printf("\n\n\r");
+*/
 
 		//decryption
 		//for (i=0; i<8; i++)

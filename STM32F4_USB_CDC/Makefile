@@ -1,6 +1,12 @@
-#ources
+# Sources
 
-SRCS = main.c stm32f4xx_it.c system_stm32f4xx.c syscalls.c led-bytes.c 
+SRCS = main.c stm32f4xx_it.c system_stm32f4xx.c syscalls.c #led-bytes.c led-table.c led-bytes-tbox.c 
+
+SRCS += led-bytes.c #original
+#SRCS += led-bytes-tbox.c
+#SRCS += #optimized
+#SRCS += led-bytes-1col.c #1col
+#SRCS += led-bytes-2col.c #2col
 
 # USB
 SRCS += usbd_usr.c usbd_cdc_vcp.c usbd_desc.c usb_bsp.c
@@ -40,7 +46,8 @@ else
 CFLAGS += -msoft-float
 endif
 
-CFLAGS += -O3
+CFLAGS += -O2
+
 
 ###################################################
 

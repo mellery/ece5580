@@ -12,7 +12,20 @@
  * Contact: Jian Guo, ntu.guo@gmail.com
  */
 
+#ifndef LED_BYTES_H
+#define LED_BYTES_H
+
+unsigned char FieldMult(unsigned char a, unsigned char b);
+void AddKey(unsigned char state[4][4], unsigned char* keyBytes, int step);
+void AddConstants(unsigned char state[4][4], int r);
+void SubCell(unsigned char state[4][4]);
+void ShiftRow(unsigned char state[4][4]);
+void MixColumn(unsigned char state[4][4]);
 
 void LED_enc(unsigned char* input, const unsigned char* userkey, int ksbits);
+void LED_enc_1col(unsigned short* input, unsigned short* userkey, int ksbits);
+void LED_enc_2col(unsigned short* input, const unsigned short* userkey, int ksbits);
 void LED80_enc(unsigned char* input, const unsigned char* userkey);
 void TestVectors(int kBits);
+
+#endif
